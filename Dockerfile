@@ -28,4 +28,4 @@ COPY . /app
 ENV PYTHONPATH=/app
 
 EXPOSE 8080
-CMD [ "poetry", "run", "python", "src/app/api/run.py" ]
+CMD ["poetry", "run", "gunicorn", "-w", "4", "-b", "0.0.0.0:8080", "src.app.main:app"]

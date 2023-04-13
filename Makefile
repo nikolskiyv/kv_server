@@ -1,17 +1,13 @@
+.PHONY: build run lint test
+
 build:
 	docker-compose build
 
 run:
-	docker-compose up -d
+	docker-compose build && docker-compose up -d
 
-# Остановка Docker-контейнера
-stop:
-	docker stop $(docker ps -q --filter ancestor=myapp)
-
-# Запуск линтера Flake8
 lint:
-	flake8 .
+	flake8 src
 
-# Запуск тестов
 test:
-	pytest -v tests/
+	pytest -v src/tests/
