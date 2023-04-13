@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "kv-server"
+version = "0.1.0"
+description = ""
+authors = ["Nikolskiy Vladimir <50186930+nikolskiyv@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "kv_server"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+flask = "^2.2.3"
+pydantic = "^1.10.7"
+redis = "^4.5.4"
+flask-restful = "^0.3.9"
+flask-inputs = "^0.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
