@@ -16,9 +16,3 @@ class UserData(BaseModel):
     user_id: UUID
     key: str
     value: str
-
-
-
-
-
-

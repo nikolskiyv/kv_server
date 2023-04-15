@@ -9,7 +9,7 @@ class RedisCrud:
     @classmethod
     def get_value(cls, user_id, key):
         with redis_cli as conn:
-            value = conn.get_value(user_id, key)
+            value = conn.hget_value(user_id, key)
             if value is None:
                 raise NotFound('Value not found')
             return jsonify({'value': value}), 200
@@ -23,7 +23,7 @@ class RedisCrud:
         with redis_cli as conn:
             if conn.value_exists(user_id, key):
                 raise BadRequest('Value already exists')
-            conn.set_value(user_id, key, value)
+            conn.hset_value(user_id, key, value)
             return jsonify({'status': 'ok'}), 201
 
     @classmethod
@@ -33,7 +33,7 @@ class RedisCrud:
         with redis_cli as conn:
             if not conn.value_exists(user_id, key):
                 raise NotFound('Value not found')
-            conn.set_value(user_id, key, value)
+            conn.hset_value(user_id, key, value)
             return jsonify({'status': 'ok'}), 200
 
     @classmethod
@@ -41,11 +41,11 @@ class RedisCrud:
         with redis_cli as conn:
             if not conn.value_exists(user_id, key):
                 raise NotFound('Value not found')
-            conn.delete_value(user_id, key)
+            conn.hdel_value(user_id, key)
             return jsonify({'status': 'ok'}), 200
 
     @classmethod
     def get_all_values(cls, user_id):
         with redis_cli as conn:
-            values = conn.get_all_values(user_id)
+            values = conn.hget_all_values(user_id)
             return jsonify({'values': values}), 200

@@ -23,7 +23,7 @@ class RedisClient:
     def __exit__(self, exc_type, exc_value, traceback):
         self.redis_cli.connection_pool.disconnect()
 
-    def get_value(self, user_id: str, key: str):
+    def hget_value(self, user_id: str, key: str):
         value = self.redis_cli.hget(f'user:{user_id}', key)
         if value is None:
             logger.exception(
@@ -33,18 +33,18 @@ class RedisClient:
             return None
         return value.decode()
 
-    def set_value(self, user_id: str, key: str, value: str):
+    def hset_value(self, user_id: str, key: str, value: str):
         self.redis_cli.hset(f'user:{user_id}', key, value)
         logger.info(f'Set {key}:{value} for user {user_id}.')
 
-    def delete_value(self, user_id: str, key: str):
+    def hdel_value(self, user_id: str, key: str):
         self.redis_cli.hdel(f'user:{user_id}', key)
         logger.info(f'Removed value under key {key} by user {user_id}.')
 
     def value_exists(self, user_id: str, key: str):
         return self.redis_cli.hexists(f'user:{user_id}', key)
 
-    def get_all_values(self, user_id):
+    def hget_all_values(self, user_id):
         all_values = self.redis_cli.hgetall(f'user:{user_id}')
         return {
             key.decode(): value.decode() for key, value in all_values.items()
