@@ -57,10 +57,10 @@ def test_get_value(client, user_id, key):
     assert response.status_code == 200
 
 
-@pytest.mark.parametrize('user_id, key, expected_status', [
-    (VALID_UUID, 'nonexistent_key', 404),
+@pytest.mark.parametrize('user_id, key', [
+    (VALID_UUID, 'nonexistent_key'),
 ])
-def test_get_value(client, user_id, key, expected_status):
+def test_try_to_get_not_existed_value(client, user_id, key):
     response = client.get(f'/users/{user_id}/keys/{key}')
     assert response.status_code == 404
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, make_response
+from flask import Blueprint, jsonify
 from werkzeug.exceptions import NotFound
 
 bp = Blueprint('api', __name__)  # url_prefix='/api')
