@@ -1,16 +1,10 @@
-from flask import (
-    jsonify,
-    request,
-)
-from werkzeug.exceptions import (
-    NotFound,
-    BadRequest,
-)
+from flask import jsonify
 
 from . import bp
-from .helpers import validate_uuid
-from ..models import KeyValue
-from ..redis import redis_cli
+from ..logic.redis_crud import RedisCrud
+from ..models import UserKey, UserID, UserData
+
+from flask_pydantic import validate
 
 
 @bp.route('/health', methods=['GET'])
@@ -19,73 +13,36 @@ def health_check():
     return jsonify({'status': 'ok'}), 200
 
 
-@bp.route('/users/<user_id>/keys/<key>', methods=['GET'])
-@validate_uuid
-def get_value(user_id: str, key: str):
+@bp.route('/value', methods=['GET'])
+@validate()
+def get_value(query: UserKey):
     """ Получение значение пользователя """
-    with redis_cli as conn:
-        value = conn.get_value(user_id, key)
-        if value is None:
-            raise NotFound('Value not found')
-        return jsonify({'value': value}), 200
+    return RedisCrud.get_value(query.user_id, query.key)
 
 
-@bp.route('/users/<user_id>', methods=['GET'])
-@validate_uuid
-def get_all_values(user_id: str):
+@bp.route('/values', methods=['GET'])
+@validate()
+def get_all_values(query: UserID):
     """ Получение всех значений пользователя """
-    with redis_cli as conn:
-        values = conn.get_all_values(user_id)
-        return jsonify({'values': values}), 200
+    return RedisCrud.get_all_values(query.user_id)
 
 
-@bp.route('/users/<user_id>/keys/<key>', methods=['PUT'])
-@validate_uuid
-def update_value(user_id: str, key: str):
+@bp.route('/value', methods=['PUT'])
+@validate()
+def update_value(body: UserData):
     """ Обновление значения """
-    data = request.get_json()
-    if not data:
-        raise BadRequest('No data provided')
-
-    data = KeyValue(**data)
-    value = data.value
-    if value is None:
-        raise BadRequest('No value provided')
-    with redis_cli as conn:
-        if not conn.value_exists(user_id, key):
-            raise NotFound('Value not found')
-        conn.set_value(user_id, key, value)
-        return jsonify({'status': 'ok'}), 200
+    return RedisCrud.update_value(body.user_id, body.key, body.value)
 
 
-@bp.route('/users/<user_id>/keys/<key>', methods=['DELETE'])
-@validate_uuid
-def delete_value(user_id: str, key: str):
+@bp.route('/value', methods=['DELETE'])
+@validate()
+def delete_value(query: UserKey):
     """ Удаление значения """
-    with redis_cli as conn:
-        if not conn.value_exists(user_id, key):
-            raise NotFound('Value not found')
-        conn.delete_value(user_id, key)
-        return jsonify({'status': 'ok'}), 200
+    return RedisCrud.delete_value(query.user_id, query.key)
 
 
-@bp.route('/users/<user_id>', methods=['POST'])
-@validate_uuid
-def create_value(user_id: str):
+@bp.route('/value', methods=['POST'])
+@validate()
+def create_value(body: UserData):
     """ Создание значения """
-    data = request.get_json()
-    if not data:
-        raise BadRequest('No data provided')
-
-    data = KeyValue(**data)
-    key = data.key
-    value = data.value
-    if not key:
-        raise BadRequest('No key provided')
-    if not value:
-        raise BadRequest('No value provided')
-    with redis_cli as conn:
-        if conn.value_exists(user_id, key):
-            raise BadRequest('Value already exists')
-        conn.set_value(user_id, key, value)
-        return jsonify({'status': 'ok'}), 201
+    return RedisCrud.create_value(body.user_id, body.key, body.value)

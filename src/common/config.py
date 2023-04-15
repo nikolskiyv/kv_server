@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     APP: str = 'app'
     SECRET_KEY: str = 'secret'
 
-    DEBUG: bool = False
+    DEBUG: bool = True
 
     REDIS_HOST: Optional[str] = 'localhost'
     REDIS_PORT: Optional[str] = 6379
@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     REDIS_RETRY_ON_TIMEOUT: bool = False
     REDIS_SOCKET_KEEPALIVE: bool = True
 
-    MAX_VALUE_SIZE = 10 * 1024 * 1024
+    MAX_VALUE_SIZE = 10 * 1024 * 1024  # 10 Mb
 
 
 settings = Settings()
