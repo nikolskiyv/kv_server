@@ -17,32 +17,37 @@ def health_check():
 @validate()
 def get_value(query: UserKey):
     """ Получение значение пользователя """
-    return KeyValueStorageCrud.get_value(query.user_id, query.key)
+    value = KeyValueStorageCrud.get_value(query.user_id, query.key)
+    return jsonify({'value': value}), 200
 
 
 @bp.route('/values', methods=['GET'])
 @validate()
 def get_all_values(query: UserID):
     """ Получение всех значений пользователя """
-    return KeyValueStorageCrud.get_all_values(query.user_id)
+    values = KeyValueStorageCrud.get_all_values(query.user_id)
+    return jsonify({'values': values}), 200
 
 
 @bp.route('/value', methods=['PUT'])
 @validate()
 def update_value(body: UserData):
     """ Обновление значения """
-    return KeyValueStorageCrud.update_value(body.user_id, body.key, body.value)
+    KeyValueStorageCrud.update_value(body.user_id, body.key, body.value)
+    return jsonify({'status': 'ok'}), 200
 
 
 @bp.route('/value', methods=['DELETE'])
 @validate()
 def delete_value(query: UserKey):
     """ Удаление значения """
-    return KeyValueStorageCrud.delete_value(query.user_id, query.key)
+    KeyValueStorageCrud.delete_value(query.user_id, query.key)
+    return jsonify({'status': 'ok'}), 200
 
 
 @bp.route('/value', methods=['POST'])
 @validate()
 def create_value(body: UserData):
     """ Создание значения """
-    return KeyValueStorageCrud.create_value(body.user_id, body.key, body.value)
+    KeyValueStorageCrud.create_value(body.user_id, body.key, body.value)
+    return jsonify({'status': 'ok'}), 200

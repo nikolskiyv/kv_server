@@ -11,7 +11,7 @@ class RedisClient(BaseKeyValueStorage):
             host='redis',
             port=settings.REDIS_PORT,
             db=0,
-            max_connections=10,
+            max_connections=1000,
             socket_timeout=settings.REDIS_SOCKET_CONNECTION_TIMEOUT,
             socket_keepalive=settings.REDIS_SOCKET_KEEPALIVE,
         )

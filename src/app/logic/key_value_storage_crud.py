@@ -1,4 +1,3 @@
-from flask import jsonify
 from werkzeug.exceptions import NotFound, BadRequest
 
 from src.app.key_value_storage.redis import redis_cli
@@ -13,7 +12,7 @@ class KeyValueStorageCrud:
             value = conn.hget_value(user_id, key)
             if value is None:
                 raise NotFound('Value not found')
-            return jsonify({'value': value}), 200
+            return value
 
     @classmethod
     def create_value(cls, user_id, key, value):
@@ -25,7 +24,6 @@ class KeyValueStorageCrud:
             if conn.hexists(user_id, key):
                 raise BadRequest('Value already exists')
             conn.hset_value(user_id, key, value)
-            return jsonify({'status': 'ok'}), 201
 
     @classmethod
     def update_value(cls, user_id, key, value):
@@ -35,7 +33,6 @@ class KeyValueStorageCrud:
             if not conn.hexists(user_id, key):
                 raise NotFound('Value not found')
             conn.hset_value(user_id, key, value)
-            return jsonify({'status': 'ok'}), 200
 
     @classmethod
     def delete_value(cls, user_id, key):
@@ -43,10 +40,8 @@ class KeyValueStorageCrud:
             if not conn.hexists(user_id, key):
                 raise NotFound('Value not found')
             conn.hdel_value(user_id, key)
-            return jsonify({'status': 'ok'}), 200
 
     @classmethod
     def get_all_values(cls, user_id):
         with cls.storage_cli as conn:
-            values = conn.hget_all_values(user_id)
-            return jsonify({'values': values}), 200
+            return conn.hget_all_values(user_id)

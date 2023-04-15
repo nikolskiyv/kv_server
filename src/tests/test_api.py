@@ -10,7 +10,7 @@ INVALID_UUID = 'not_a_uuid'
 def test_get_value_from_another_user(client):
     data1 = {'user_id': VALID_UUID, 'key': 'key1', 'value': 'value1'}
     response1 = client.post('/value', json=data1)
-    assert response1.status_code == 201
+    assert response1.status_code == 200
 
     response2 = client.get(f'/value?user_id={ANOTHER_VALID_UUID}&key=key1')
     assert response2.status_code == 404
@@ -22,7 +22,7 @@ def test_get_value_from_another_user(client):
 def test_create_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
     response = client.post('/value', json=data)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 @pytest.mark.parametrize('user_id, key, value', [
@@ -31,7 +31,7 @@ def test_create_value(client, user_id, key, value):
 def test_create_large_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
     response = client.post('/value', json=data)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 @pytest.mark.parametrize('user_id, key, value', [
