@@ -1,19 +1,19 @@
 import redis
 from loguru import logger
 
+from src.app.key_value_storage.base import BaseKeyValueStorage
+from src.common import settings
 
-MAX_VALUE_SIZE = 10 * 1024 * 1024  # Максимальный объем значения 10 МБ
 
-
-class RedisClient:
+class RedisClient(BaseKeyValueStorage):
     def __init__(self):
         self.pool = redis.ConnectionPool(
             host='redis',
-            port=6379,
+            port=settings.REDIS_PORT,
             db=0,
             max_connections=10,
-            socket_timeout=3,
-            socket_keepalive=True,
+            socket_timeout=settings.REDIS_SOCKET_CONNECTION_TIMEOUT,
+            socket_keepalive=settings.REDIS_SOCKET_KEEPALIVE,
         )
 
     def __enter__(self):
@@ -41,7 +41,7 @@ class RedisClient:
         self.redis_cli.hdel(f'user:{user_id}', key)
         logger.info(f'Removed value under key {key} by user {user_id}.')
 
-    def value_exists(self, user_id: str, key: str):
+    def hexists(self, user_id: str, key: str):
         return self.redis_cli.hexists(f'user:{user_id}', key)
 
     def hget_all_values(self, user_id):

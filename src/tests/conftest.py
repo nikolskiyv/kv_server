@@ -1,7 +1,7 @@
 import pytest
 
 from src.app.main import create_app
-from src.app.redis import RedisClient
+from src.app.key_value_storage.redis import RedisClient
 
 
 @pytest.fixture
