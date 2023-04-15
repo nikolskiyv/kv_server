@@ -10,4 +10,5 @@ lint:
 	flake8 src
 
 test:
-	pytest -v src/tests/
+	docker-compose up --build tests
+

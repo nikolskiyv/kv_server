@@ -18,11 +18,5 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
-      - name: DockerComposeUp
-        run: make run
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
       - name: TestMain
-        run: pytest -v src/tests
+        run: make test

@@ -19,5 +19,14 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
+  tests:
+    build: .
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - TESTING=1
+    command: [ "poetry", "run", "pytest", "-v" ]
+    depends_on:
+      - redis
 volumes:
   redis_data:

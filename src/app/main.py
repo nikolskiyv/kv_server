@@ -12,8 +12,6 @@ def create_app():
     flask_app = Flask(settings.APP or __name__)
 
     flask_app.config['DEBUG'] = settings.DEBUG
-    flask_app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
-    flask_app.config['JSON_AS_ASCII'] = False
 
     # app.logger.disabled = True
     # log = flask_logging.getLogger('werkzeug')
