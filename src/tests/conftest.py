@@ -1,7 +1,7 @@
 import pytest
-import redis
 
 from src.app.main import create_app
+from src.app.redis import RedisClient
 
 
 @pytest.fixture
@@ -13,30 +13,15 @@ def client():
         yield client
 
 
-@pytest.fixture(scope="session")
-def redis_server():
-    # Запуск тестового Redis-сервера перед запуском тестов
-    server = redis.server.RedisServer()
-    server.start()
-
-    yield server
-
-    # Остановка Redis-сервера после окончания тестов
-    server.stop()
+@pytest.fixture(scope='module')
+def redis_client():
+    with RedisClient() as client:
+        yield client
 
 
-@pytest.fixture(scope="function")
-def redis_client(redis_server):
-    # Создание тестовой базы данных Redis
-    client = redis.Redis(host=redis_server.host, port=redis_server.port, db=0)
-
-    # Удаление всех данных перед запуском каждого теста
-    client.flushall()
-
-    yield client
-
-    # Очистка базы данных после завершения каждого теста
-    client.flushall()
+@pytest.fixture(autouse=True)
+def setup_method(redis_client):
+    redis_client.redis_cli.flushdb()
 
 
 @pytest.fixture
