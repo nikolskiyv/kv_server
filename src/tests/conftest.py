@@ -22,12 +22,3 @@ def redis_client():
 @pytest.fixture(autouse=True)
 def setup_method(redis_client):
     redis_client.redis_cli.flushdb()
-
-
-@pytest.fixture
-def test_data():
-    return {
-        'user_id': 'test_user',
-        'key': 'test_key',
-        'value': 'test_value'
-    }

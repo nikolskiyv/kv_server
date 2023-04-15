@@ -8,17 +8,21 @@ from werkzeug.exceptions import (
 )
 
 from . import bp
+from .helpers import validate_uuid
 from ..models import KeyValue
 from ..redis import redis_cli
 
 
 @bp.route('/health', methods=['GET'])
 def health_check():
+    """ Проверка жизнеспособности сервиса """
     return jsonify({'status': 'ok'}), 200
 
 
 @bp.route('/users/<user_id>/keys/<key>', methods=['GET'])
+@validate_uuid
 def get_value(user_id: str, key: str):
+    """ Получение значение пользователя """
     with redis_cli as conn:
         value = conn.get_value(user_id, key)
         if value is None:
@@ -27,14 +31,18 @@ def get_value(user_id: str, key: str):
 
 
 @bp.route('/users/<user_id>', methods=['GET'])
+@validate_uuid
 def get_all_values(user_id: str):
+    """ Получение всех значений пользователя """
     with redis_cli as conn:
         values = conn.get_all_values(user_id)
         return jsonify({'values': values}), 200
 
 
 @bp.route('/users/<user_id>/keys/<key>', methods=['PUT'])
+@validate_uuid
 def update_value(user_id: str, key: str):
+    """ Обновление значения """
     data = request.get_json()
     if not data:
         raise BadRequest('No data provided')
@@ -51,7 +59,9 @@ def update_value(user_id: str, key: str):
 
 
 @bp.route('/users/<user_id>/keys/<key>', methods=['DELETE'])
+@validate_uuid
 def delete_value(user_id: str, key: str):
+    """ Удаление значения """
     with redis_cli as conn:
         if not conn.value_exists(user_id, key):
             raise NotFound('Value not found')
@@ -60,7 +70,9 @@ def delete_value(user_id: str, key: str):
 
 
 @bp.route('/users/<user_id>', methods=['POST'])
+@validate_uuid
 def create_value(user_id: str):
+    """ Создание значения """
     data = request.get_json()
     if not data:
         raise BadRequest('No data provided')

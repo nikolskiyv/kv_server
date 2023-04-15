@@ -5,6 +5,7 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     APP: str = 'app'
+    SECRET_KEY: str = 'secret'
 
     DEBUG: bool = False
 
@@ -17,6 +18,8 @@ class Settings(BaseSettings):
     REDIS_SOCKET_TIMEOUT: bool = 1
     REDIS_RETRY_ON_TIMEOUT: bool = False
     REDIS_SOCKET_KEEPALIVE: bool = True
+
+    MAX_VALUE_SIZE = 10 * 1024 * 1024
 
 
 settings = Settings()
