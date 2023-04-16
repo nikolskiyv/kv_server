@@ -1,4 +1,4 @@
-FROM python:3.9 as python-base
+FROM python:3.9-slim-bullseye as python-base
 
 ENV POETRY_VERSION=1.4.2
 ENV POETRY_HOME=/opt/poetry

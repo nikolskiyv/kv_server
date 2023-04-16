@@ -9,10 +9,10 @@ INVALID_UUID = 'not_a_uuid'
 
 def test_get_value_from_another_user(client):
     data1 = {'user_id': VALID_UUID, 'key': 'key1', 'value': 'value1'}
-    response1 = client.post('/value', json=data1)
+    response1 = client.post('/storage', json=data1)
     assert response1.status_code == 200
 
-    response2 = client.get(f'/value?user_id={ANOTHER_VALID_UUID}&key=key1')
+    response2 = client.get(f'/storage?user_id={ANOTHER_VALID_UUID}&key=key1')
     assert response2.status_code == 404
 
 
@@ -21,7 +21,7 @@ def test_get_value_from_another_user(client):
 ], ids=['short_value'])
 def test_create_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
-    response = client.post('/value', json=data)
+    response = client.post('/storage', json=data)
     assert response.status_code == 200
 
 
@@ -30,7 +30,7 @@ def test_create_value(client, user_id, key, value):
 ], ids=['long_value'])
 def test_create_large_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
-    response = client.post('/value', json=data)
+    response = client.post('/storage', json=data)
     assert response.status_code == 200
 
 
@@ -42,7 +42,7 @@ def test_create_large_value(client, user_id, key, value):
 ], ids=['base', 'empty key', 'empty value', 'long_value'])
 def test_try_to_create_value_with_invalid_user_id(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
-    response = client.post('/value', json=data)
+    response = client.post('/storage', json=data)
     assert response.status_code == 400
 
 
@@ -51,9 +51,9 @@ def test_try_to_create_value_with_invalid_user_id(client, user_id, key, value):
 ])
 def test_get_value(client, user_id, key):
     data = {'user_id': user_id, 'key': key, 'value': 'value'}
-    client.post('/value', json=data)
+    client.post('/storage', json=data)
 
-    response = client.get(f'/value?user_id={user_id}&key={key}')
+    response = client.get(f'/storage?user_id={user_id}&key={key}')
     assert response.status_code == 200
 
 
@@ -61,7 +61,7 @@ def test_get_value(client, user_id, key):
     (VALID_UUID, 'nonexistent_key'),
 ])
 def test_try_to_get_not_existed_value(client, user_id, key):
-    response = client.get(f'/value?user_id={user_id}&key={key}')
+    response = client.get(f'/storage?user_id={user_id}&key={key}')
     assert response.status_code == 404
 
 
@@ -70,11 +70,11 @@ def test_try_to_get_not_existed_value(client, user_id, key):
 ], ids=['base'])
 def test_update_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
-    client.post('/value', json=data)
+    client.post('/storage', json=data)
 
     updated_data = {'user_id': user_id, 'key': key, 'value': 'new_value'}
     response = client.put(
-        '/value?user_id={user_id}&key={key}', json=updated_data)
+        '/storage?user_id={user_id}&key={key}', json=updated_data)
     assert response.status_code == 200
 
 
@@ -83,7 +83,7 @@ def test_update_value(client, user_id, key, value):
 ], ids=['base'])
 def test_try_to_update_no_exists_value(client, user_id, key, value):
     data = {'user_id': user_id, 'key': key, 'value': value}
-    response = client.put(f'/value?user_id={user_id}&key={key}', json=data)
+    response = client.put(f'/storage?user_id={user_id}&key={key}', json=data)
     assert response.status_code == 404
 
 
@@ -92,9 +92,9 @@ def test_try_to_update_no_exists_value(client, user_id, key, value):
 ], ids=['base'])
 def test_delete_value(client, user_id, key):
     data = {'user_id': user_id, 'key': key, 'value': 'value'}
-    client.post('/value', json=data)
+    client.post('/storage', json=data)
 
-    response = client.delete(f'/value?user_id={user_id}&key={key}')
+    response = client.delete(f'/storage?user_id={user_id}&key={key}')
     assert response.status_code == 200
 
 
@@ -102,5 +102,5 @@ def test_delete_value(client, user_id, key):
     (VALID_UUID, 'test_key'),
 ], ids=['base'])
 def test_try_to_delete_not_existed_value(client, user_id, key):
-    response = client.delete(f'/value?user_id={user_id}&key={key}')
+    response = client.delete(f'/storage?user_id={user_id}&key={key}')
     assert response.status_code == 404

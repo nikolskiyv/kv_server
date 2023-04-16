@@ -5,7 +5,7 @@ build:
 .PHONY: run_all_docker
 run_all_docker:
 	docker-compose -f docker-compose.yml build && \
-	docker-compose -f docker-compose.yml up -d
+	docker-compose -f docker-compose.yml up app
 
 .PHONY: stop_all_docker
 stop_all_docker:
@@ -18,4 +18,3 @@ lint:
 .PHONY: test
 test:
 	docker-compose -f docker-compose.yml up --build --exit-code-from tests
-

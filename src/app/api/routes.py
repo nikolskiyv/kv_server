@@ -13,7 +13,7 @@ def health_check():
     return jsonify({'status': 'ok'}), 200
 
 
-@bp.route('/value', methods=['GET'])
+@bp.route('/storage', methods=['GET'])
 @validate()
 def get_value(query: UserKey):
     """ Получение значение пользователя """
@@ -21,7 +21,7 @@ def get_value(query: UserKey):
     return jsonify({'value': value}), 200
 
 
-@bp.route('/values', methods=['GET'])
+@bp.route('/storage', methods=['GET'])
 @validate()
 def get_all_values(query: UserID):
     """ Получение всех значений пользователя """
@@ -29,7 +29,7 @@ def get_all_values(query: UserID):
     return jsonify({'values': values}), 200
 
 
-@bp.route('/value', methods=['PUT'])
+@bp.route('/storage', methods=['PUT'])
 @validate()
 def update_value(body: UserData):
     """ Обновление значения """
@@ -37,7 +37,7 @@ def update_value(body: UserData):
     return jsonify({'status': 'ok'}), 200
 
 
-@bp.route('/value', methods=['DELETE'])
+@bp.route('/storage', methods=['DELETE'])
 @validate()
 def delete_value(query: UserKey):
     """ Удаление значения """
@@ -45,7 +45,7 @@ def delete_value(query: UserKey):
     return jsonify({'status': 'ok'}), 200
 
 
-@bp.route('/value', methods=['POST'])
+@bp.route('/storage', methods=['POST'])
 @validate()
 def create_value(body: UserData):
     """ Создание значения """
