@@ -16,3 +16,8 @@ class UserData(BaseModel):
     user_id: UUID
     key: str
     value: str
+
+
+class KeyValueResponse(BaseModel):
+    key: str
+    value: str

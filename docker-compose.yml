@@ -19,6 +19,7 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
+    tty: true
   tests:
     build: .
     environment:
@@ -28,5 +29,6 @@ services:
     command: [ "poetry", "run", "pytest", "-v" ]
     depends_on:
       - redis
+    tty: true
 volumes:
   redis_data:

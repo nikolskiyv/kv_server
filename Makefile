@@ -17,4 +17,5 @@ lint:
 
 .PHONY: test
 test:
-	docker-compose -f docker-compose.yml up --build --exit-code-from tests
+	docker-compose -f docker-compose.yml build && \
+	docker-compose -f docker-compose.yml up --abort-on-container-exit tests
